@@ -4,10 +4,12 @@
 
 package WebServer;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -57,19 +59,15 @@ public class ServerThread implements Runnable {
 	//get the request reading the socket input stream
 	private StringBuilder getRequest(){
 		
-		StringBuilder result = new StringBuilder();;
-		
+		StringBuilder result = new StringBuilder();
+
 		try {
-
 			InputStream inputStream = s.getInputStream();
-
-			
 			do {
 				result.append((char) inputStream.read());
 			} while (inputStream.available() > 0);
 			
 			System.out.println(result);
-			
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -77,7 +75,6 @@ public class ServerThread implements Runnable {
 			httpStatusCode = "400 Bad Request";
 			e.printStackTrace();
 		}
-		
 		return result;		
 		
 	}
@@ -86,13 +83,10 @@ public class ServerThread implements Runnable {
 	private String ObtainPath(String Request){
 		
 		String path = null;
-
 		String[] lines = null;
 		lines = Request.split("\n");
-
 		String[] parts = null;
 		parts = lines[0].split(" ");
-
 		path = parts[1];
 		
 		return path;
@@ -251,12 +245,10 @@ public class ServerThread implements Runnable {
 				output = s.getOutputStream();
 				//PrintWriter out = new PrintWriter(output, true);
 				
-				out.println("HTTP/1.1 "+httpStatusCode);
-				out.println("Server: Mio Web Server");
+				out.println("HTTP/1.0 "+httpStatusCode);
+				out.println("Server: Mango Web Server");
 				out.println("Content-type: " + type +"; charset=utf-8");
 				// out.println("Date: " + new Date());
-				out.println("Keep-Alive: timeout=5, max=2000");
-				out.println("Connection: Keep-Alive");
 				out.println("Content-Length: " + file.length());
 				out.println("");
 				
@@ -290,12 +282,10 @@ public class ServerThread implements Runnable {
 			try{
 				output = s.getOutputStream();
 				//PrintWriter out = new PrintWriter(output, true);
-				out.println("HTTP/1.1 " + httpStatusCode);
-				out.println("Server: Mio Web Server");
+				out.println("HTTP/1.0 " + httpStatusCode);
+				out.println("Server: Mango Web Server");
 				out.println("Content-type: " + type +"; charset=utf-8");
 				// out.println("Date: " + new Date());
-				out.println("Keep-Alive: timeout=5, max=2000");
-				out.println("Connection: Keep-Alive");
 				out.println("Content-Length: " + file.length());
 				out.println("");
 				
@@ -312,17 +302,15 @@ public class ServerThread implements Runnable {
 				output = s.getOutputStream();
 				//PrintWriter out = new PrintWriter(output, true);
 				out.println("HTTP/1.1 405 Method Not Allowed");
-				out.println("Server: Mio Web Server");
+				out.println("Server: Mango Web Server");
 				out.println("Allow: GET,POST,HEAD");
 				out.println("Content-type: " + type +"; charset=utf-8");
 				// out.println("Date: " + new Date());
-				out.println("Keep-Alive: timeout=5, max=2000");
-				out.println("Connection: Keep-Alive");
 				out.println("Content-Length: " + file.length());
 				out.println("");
 				out.println("<html>"
 						+ "<head>"
-						+ "<title>Index do not exist</title>"
+						+ "<title>Method not Allowed</title>"
 						+ "<body>"
 						+ "<h3>405 Method not Allowed</h3>"
 						+ "</body>"
